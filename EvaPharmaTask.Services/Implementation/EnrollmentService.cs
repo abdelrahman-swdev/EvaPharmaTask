@@ -42,15 +42,11 @@ namespace EvaPharmaTask.Services.Implementation
 
         private async Task<ApiResponse<int>> ValidateEnrollmentBeforeSaving(EnrollmentForCreationDto enrollmentDto)
         {
-            var isStudentExists = await _unitOfWork.Repository<Student>()
-                    .FindBy(a => a.Id == enrollmentDto.StudentId)
-                    .AnyAsync();
+            var isStudentExists = await IsStudentExistsAsync(enrollmentDto.StudentId);
             if (!isStudentExists)
                 return ApiResponse<int>.Failure(HttpStatusCode.NotFound, "Student Not Found");
 
-            var isCourseExists = await _unitOfWork.Repository<Course>()
-                .FindBy(a => a.Id == enrollmentDto.CourseId)
-                .AnyAsync();
+            var isCourseExists = await IsCourseExistsAsync(enrollmentDto.CourseId);
             if (!isCourseExists)
                 return ApiResponse<int>.Failure(HttpStatusCode.NotFound, "Course Not Found");
 
